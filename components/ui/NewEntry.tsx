@@ -4,10 +4,11 @@ import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import { EntriesContext } from '@/context/entries';
+import { UIContext } from '@/context/ui';
 export const NewEntry = () => {
 
   const {addNewEntry} = useContext( EntriesContext)
-
+  const { isAddingEntry, setIsAddingEntry} = useContext(UIContext)
   const [isAdding, setIsAdding] = useState(false)
 
   const [inputValue, setInputValue] = useState('')
@@ -18,7 +19,7 @@ export const NewEntry = () => {
   }
 
   const onCanceled = () => {
-    setIsAdding(false)
+    setIsAddingEntry(false)
     setTouched(false)
   }
 
@@ -26,13 +27,13 @@ export const NewEntry = () => {
     if( inputValue.length <=0) return;
     addNewEntry(inputValue)
     setInputValue('')
-    setIsAdding(false)
+    setIsAddingEntry(false)
     setTouched(false)
   }
   return (
     <Box sx={{ paddingX:3}}>
         {
-          isAdding 
+          isAddingEntry 
           ?(
             <>
               <TextField
@@ -63,7 +64,7 @@ export const NewEntry = () => {
                 variant='outlined'
                 fullWidth
                 endIcon={<AddBoxOutlinedIcon/>}
-                onClick={() => setIsAdding(true)}
+                onClick={() => setIsAddingEntry(true)}
             >
                 Agregar Entrada
             </Button>
