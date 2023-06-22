@@ -2,6 +2,14 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+```
+Para correr localmente, se necesita la bd
+docker-compose up -d
+
+```
+
+
+
 First, run the development server:
 
 ```bash

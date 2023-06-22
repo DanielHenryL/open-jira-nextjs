@@ -2,7 +2,7 @@ import { Entry } from "@/interfaces";
 import mongoose, { Model, Schema } from "mongoose";
 
 //no es necesaria esta parte pero es de utilidad.
-interface IEntry extends Entry{}
+export interface IEntry extends Entry {}
 
 
 //Crando schema
