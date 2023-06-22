@@ -12,7 +12,7 @@ const entrySchema = new Schema({
     status:{
         type:String,
         enum:{
-            values:['pedding', 'in-progress', 'finished'],
+            values:['pending', 'in-progress', 'finished'],
             message:'{VALUE} no es un estado permitido'
         }
     }
