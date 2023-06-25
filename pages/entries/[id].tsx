@@ -1,4 +1,4 @@
-import { useState, ChangeEvent, useMemo, FC } from 'react'
+import { useState, ChangeEvent, useMemo, FC, useContext } from 'react'
 import { GetServerSideProps } from 'next'
 import { capitalize, Button, Card, CardActions, CardContent, CardHeader, FormControl, FormControlLabel, FormLabel, Grid, Radio, RadioGroup, TextField, IconButton } from '@mui/material'
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
@@ -7,6 +7,8 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { Entry, EntryStatus } from '@/interfaces';
 import { Layout } from '@/components/layouts'
 import { dbEntries } from '@/database';
+import { EntriesContext } from '@/context/entries';
+import { useRouter } from 'next/router';
 
 const validStatus:EntryStatus[] = ['pending','in-progress','finished']
 
@@ -15,6 +17,9 @@ interface Props {
 }
 
 const EntryPage:FC<Props> = ({entry}) => {
+
+    const {updateEntry, deleteEntry} = useContext( EntriesContext )
+    const router = useRouter()
     const [inputValue, setInputValue] = useState(entry.description)
     const [status, setStatus] = useState<EntryStatus>(entry.status)
     const [touched, setTouched] = useState(false)
@@ -30,7 +35,23 @@ const EntryPage:FC<Props> = ({entry}) => {
     }
 
     const onSave = () => {
-        console.log({inputValue, status})
+        // la mejor opcion
+        // const entryUpdate:Entry = {
+        //     ...entry,
+        //     status,
+        //     description:inputValue
+        // }
+
+        // mutando
+        entry.description = inputValue
+        entry.status = status
+        updateEntry(entry, true)
+        router.push('/')
+    }
+
+    const onDelete = () => {
+        deleteEntry(entry._id)
+        router.push('/')
     }
   return (
     <Layout title={inputValue.substring(0,20) + '...'}>
@@ -95,9 +116,8 @@ const EntryPage:FC<Props> = ({entry}) => {
             bottom:30,
             right:30,
             backgroundColor:'error.dark'
-
         }}>
-          <DeleteOutlinedIcon/>
+          <DeleteOutlinedIcon onClick={onDelete}/>
         </IconButton>
     </Layout>
   )
