@@ -4,21 +4,19 @@ import { capitalize, Button, Card, CardActions, CardContent, CardHeader, FormCon
 import SaveOutlinedIcon from '@mui/icons-material/SaveOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 
-import { EntryStatus } from '@/interfaces';
+import { Entry, EntryStatus } from '@/interfaces';
 import { Layout } from '@/components/layouts'
-import mongoose from 'mongoose';
+import { dbEntries } from '@/database';
 
 const validStatus:EntryStatus[] = ['pending','in-progress','finished']
 
 interface Props {
-    age:number
+    entry:Entry
 }
 
-const EntryPage:FC<Props> = (props) => {
-    console.log({props})
-
-    const [inputValue, setInputValue] = useState('')
-    const [status, setStatus] = useState<EntryStatus>('pending')
+const EntryPage:FC<Props> = ({entry}) => {
+    const [inputValue, setInputValue] = useState(entry.description)
+    const [status, setStatus] = useState<EntryStatus>(entry.status)
     const [touched, setTouched] = useState(false)
 
     const isNotValue = useMemo( () => inputValue.length <= 0 && touched ,[inputValue, touched])
@@ -35,7 +33,7 @@ const EntryPage:FC<Props> = (props) => {
         console.log({inputValue, status})
     }
   return (
-    <Layout title='.... ....  ..... '>
+    <Layout title={inputValue.substring(0,20) + '...'}>
         <Grid
             container
             justifyContent={'center'}
@@ -44,8 +42,8 @@ const EntryPage:FC<Props> = (props) => {
             <Grid item xs={ 12 } sm={ 8 } md={ 6 }>
                 <Card>
                     <CardHeader
-                        title={`Entrada:${inputValue}`}
-                        subheader='Creada hace: ... minutos'
+                        title={`Entrada:`}
+                        subheader={`Creada hace:${ entry.createdAt } minutos`}
                     />
                     <CardContent>
                         <TextField
@@ -111,7 +109,9 @@ const EntryPage:FC<Props> = (props) => {
 export const getServerSideProps: GetServerSideProps = async ({params}) => {
     const { id } = params as { id: string }
     
-    if( !mongoose.isValidObjectId(id)){
+    const entry  = await dbEntries.getEntryById( id )
+
+    if( !entry){
         return {
             redirect:{
                 destination: '/',
@@ -122,7 +122,7 @@ export const getServerSideProps: GetServerSideProps = async ({params}) => {
 
     return {
         props: {
-            id        
+            entry        
         }
     }
 }
