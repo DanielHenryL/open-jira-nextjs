@@ -2,8 +2,8 @@ import { FC, DragEvent, useContext } from 'react'
 import { Card, CardActionArea, CardContent, CardActions,Typography} from '@mui/material'
 import { Entry } from '@/interfaces'
 import { UIContext } from '@/context/ui'
-import NextLink from 'next/link'
 import { useRouter } from 'next/router'
+import { dateFunctions } from '@/utils'
 
 interface Props{
   entry:Entry
@@ -32,7 +32,7 @@ export const EntryCard:FC<Props> = ({entry}) => {
           <Typography sx={{whiteSpace:'pre-line'}}>{entry.description}</Typography>
         </CardContent>
         <CardActions sx={{ display:'flex', justifyContent:'end', paddingRight:2}}>
-          <Typography variant='body2'>{entry.createdAt}</Typography>
+          <Typography variant='body2'>{ dateFunctions.getFormatDistanceToNow( entry.createdAt ) }</Typography>
         </CardActions>
       </CardActionArea>
     </Card>
